@@ -47,7 +47,7 @@ function mapSupabaseToInvoice(data: any): Invoice {
 export const invoiceService = {
   async getAll(filters?: { status?: string; clientId?: string }) {
     const supabase = createClient()
-    let query = supabase.from("invoices").select("*").order("created_at", { ascending: false })
+    let query = supabase.from("fin_invoices").select("*").order("created_at", { ascending: false })
 
     if (filters?.status && filters.status !== "all") {
       query = query.eq("status", filters.status)
@@ -69,7 +69,7 @@ export const invoiceService = {
 
   async getById(id: string) {
     const supabase = createClient()
-    const { data, error } = await supabase.from("invoices").select("*").eq("id", id).single()
+    const { data, error } = await supabase.from("fin_invoices").select("*").eq("id", id).single()
 
     if (error) {
       console.error("[v0] Error fetching invoice:", error)
@@ -132,7 +132,7 @@ export const invoiceService = {
     if (updates.items) updateData.items = updates.items
     if (updates.paymentInfo) updateData.payment_info = updates.paymentInfo
 
-    const { data, error } = await supabase.from("invoices").update(updateData).eq("id", id).select().single()
+    const { data, error } = await supabase.from("fin_invoices").update(updateData).eq("id", id).select().single()
 
     if (error) {
       console.error("[v0] Error updating invoice:", error)
@@ -146,7 +146,7 @@ export const invoiceService = {
     const supabase = createClient()
 
     // First get the invoice to know the total amount
-    const { data: invoice, error: fetchError } = await supabase.from("invoices").select("*").eq("id", id).single()
+    const { data: invoice, error: fetchError } = await supabase.from("fin_invoices").select("*").eq("id", id).single()
 
     if (fetchError) {
       console.error("[v0] Error fetching invoice for status update:", fetchError)
@@ -178,7 +178,7 @@ export const invoiceService = {
 
   async delete(id: string) {
     const supabase = createClient()
-    const { error } = await supabase.from("invoices").delete().eq("id", id)
+    const { error } = await supabase.from("fin_invoices").delete().eq("id", id)
 
     if (error) {
       console.error("[v0] Error deleting invoice:", error)
@@ -188,7 +188,7 @@ export const invoiceService = {
 
   async getStats() {
     const supabase = createClient()
-    const { data: invoices, error } = await supabase.from("invoices").select("*")
+    const { data: invoices, error } = await supabase.from("fin_invoices").select("*")
 
     if (error) {
       console.error("[v0] Error fetching invoice stats:", error)

@@ -16,7 +16,7 @@ export interface Transaction {
 export const transactionService = {
   async getAll(filters?: { type?: string; startDate?: string; endDate?: string }) {
     const supabase = createClient()
-    let query = supabase.from("transactions").select("*").order("date", { ascending: false })
+    let query = supabase.from("fin_transactions").select("*").order("date", { ascending: false })
 
     if (filters?.type && filters.type !== "all") {
       query = query.eq("type", filters.type)
@@ -67,7 +67,7 @@ export const transactionService = {
 
   async delete(id: string) {
     const supabase = createClient()
-    const { error } = await supabase.from("transactions").delete().eq("id", id)
+    const { error } = await supabase.from("fin_transactions").delete().eq("id", id)
 
     if (error) {
       console.error("[v0] Error deleting transaction:", error)
@@ -77,7 +77,7 @@ export const transactionService = {
 
   async getStats() {
     const supabase = createClient()
-    const { data: transactions, error } = await supabase.from("transactions").select("*")
+    const { data: transactions, error } = await supabase.from("fin_transactions").select("*")
 
     if (error) {
       console.error("[v0] Error fetching transaction stats:", error)
